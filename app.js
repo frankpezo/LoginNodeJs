@@ -11,18 +11,21 @@ dotenv.config({ path: './env/.env' }); //Configuramos la ruta del archivo donde 
 //3. Para poder utilizar el direcctorio PUBLIC
 app.use('/recursos', express.static('public'));
 app.use('/recursos', express.static(__dirname + '/public'));
+console.log(__dirname);
 app.set('view engine', 'ejs'); //Seteamos la plantilla
+
 
 //4. Módulo Bcrpytjs y Express-session
 const bcrpytjs = require('bcryptjs');
 const session = require('express-session');
-/* app.use(session({
+app.use(session({
     secret: '12345',
     resave: true,
     saveUninitialized: true
-})); */
+}));
 
-
+//5. Conexión a la BD
+const conexion = require('./database/db');
 
 
 //Rutas
