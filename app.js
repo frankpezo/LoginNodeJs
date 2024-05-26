@@ -30,8 +30,18 @@ const conexion = require('./database/db');
 
 //Rutas
 app.get('/', (req, res) => {
-    res.send('Login Dos');
+    res.render('index.ejs');
 });
+
+//Mostamos el login
+app.get('/login', (req, res) => {
+    res.render('login.ejs');
+});
+
+//Mostramos register
+app.get('/register', (req, res) => {
+    res.render('register');
+})
 //Servidor
 const puerto = process.env.PORT || 5000;
 app.listen(puerto, () => {
