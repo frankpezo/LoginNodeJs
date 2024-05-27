@@ -32,6 +32,25 @@
             </div>
         </form>
     </div>
+
+
+
+    <!-- Para el botón de notificaciones-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Para el sweet alert-->
+    <% if(typeof alert !="undefined" ){ %>
+        <script>
+            Swal.fire({
+                title: '<%= alertTitle %>',
+                text: '<%=  alertMessage%>',
+                icon: '<%= alertIcon %>',
+                showConfirmButton: '<%= showConfirmButton %>',
+                time: '<%= timer %>',
+            }).then(() => {
+                window.location = '/<%= ruta%>'
+            });
+        </script>
+        <% }%>
 </body>
 
 </html>
