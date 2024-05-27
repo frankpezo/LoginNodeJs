@@ -42,6 +42,36 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register');
 })
+
+//Para poder realizar el registro
+app.post('/register', async (req, res) => {
+    //Capturamos datos y guardamos en la bd
+    const user = req.body.user;
+    const name = req.body.name;
+    const rol = req.body.rol;
+    const pass = req.body.pass;
+    let passHash = await bcrpytjs.hash(pass, 8);
+
+    conexion.query('INSERT INTO user SET ?', { user: user, name: name, rol: rol, pass: passHash }, async (error, results) => {
+        if (error) {
+            console.log(`EL ERROR ES : ${error}`);
+        } else {
+            //Para que funcione el sweet alert
+            res.render('register', {
+                alert: true,
+                alertTitle: 'Registro',
+                alertMessage: '¡Se registró con éxito!',
+                alertIcon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: 'login'
+            });
+        }
+    });
+
+});
+
+
 //Servidor
 const puerto = process.env.PORT || 5000;
 app.listen(puerto, () => {
