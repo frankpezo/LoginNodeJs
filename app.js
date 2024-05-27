@@ -26,6 +26,7 @@ app.use(session({
 
 //5. Conexión a la BD
 const conexion = require('./database/db');
+const { name } = require('ejs');
 
 
 //Rutas
@@ -70,6 +71,62 @@ app.post('/register', async (req, res) => {
     });
 
 });
+
+// Para poder autenticar los datos del login
+app.post('/auth', async (req, res) => {
+    const user = req.body.user;
+    const pass = req.body.pass;
+
+    let passHash = await bcrpytjs.hash(pass, 8);
+
+    if (user && pass) {
+        conexion.query('SELECT * FROM user WHERE user = ?', [user], async (error, results) => {
+
+            if (results.length == 0 || !(await bcrpytjs.compare(pass, results[0].pass))) {
+                //Mensaje de error
+                res.render('login', {
+                    alert: true,
+                    alertTitle: 'Error',
+                    alertMessage: 'Usuario y/o contraseña incorrecta',
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: 'login'
+                });
+            } else {
+                //Para la sesión
+                req.session.loggedin = true;
+                req.session.name = name;
+
+                //Mensaje de confirmación
+                res.render('login', {
+                    alert: true,
+                    alertTitle: 'Conexión éxitosa',
+                    alertMessage: '¡Login correcto!',
+                    alertIcon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: ''
+                });
+            }
+
+        })
+    } else {
+        //En caso los campos queden vacíos
+        res.render('login', {
+            alert: true,
+            alertTitle: 'Advertencia',
+            alertMessage: '¡Los campos no pueden quedar vacíos!',
+            alertIcon: 'warning',
+            showConfirmButton: true,
+            timer: 4000,
+            ruta: 'login'
+        });
+    }
+});
+
+
+
 
 
 //Servidor
