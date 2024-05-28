@@ -30,10 +30,6 @@ const { name } = require('ejs');
 
 
 //Rutas
-app.get('/', (req, res) => {
-    res.render('index.ejs');
-});
-
 //Mostamos el login
 app.get('/login', (req, res) => {
     res.render('login.ejs');
@@ -96,7 +92,7 @@ app.post('/auth', async (req, res) => {
             } else {
                 //Para la sesión
                 req.session.loggedin = true;
-                req.session.name = name;
+                req.session.name = results[0].name;
 
                 //Mensaje de confirmación
                 res.render('login', {
@@ -125,9 +121,27 @@ app.post('/auth', async (req, res) => {
     }
 });
 
+//Para controlar la autenticación en las demás páginas
+app.get('/', (req, res) => {
+    if (req.session.loggedin) {
+        res.render('index', {
+            login: true,
+            name: req.session.name
+        });
+    } else {
+        res.render('index', {
+            login: false,
+            name: 'Debe iniciar sesión'
+        })
+    }
+});
 
-
-
+//Para cerrar sesión 
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
+});
 
 //Servidor
 const puerto = process.env.PORT || 5000;

@@ -4,13 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="recursos/css/style.css">
     <title>Document</title>
 </head>
 
 <body>
     <h1>PÁGINA DE INICIO</h1>
     <!-- <%= %>, lo utilizamos para encerrar variables y mostrarlass-->
-
+    <% if(login){ %>
+        <h2>Usuario conectado: <b>
+                <%=name%>
+            </b></h2>
+        <a href="logout" class="a-logout">Cerrar sesión</a>
+        <% }else{ %>
+            <h2><b>
+                    <%= name%>
+                </b></h2>
+            <a href="login" class="a-login">Ir a login</a>
+            <% } %>
 </body>
 
 </html>
